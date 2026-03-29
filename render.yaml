@@ -1,0 +1,36 @@
+services:
+  # Backend Node.js
+  - type: web
+    name: smscorvo-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend-nodejs && npm install
+    startCommand: cd backend-nodejs && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8001
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: smscorvo
+      - key: EMERGENT_LLM_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://smscorvo.onrender.com
+
+  # Frontend React
+  - type: web
+    name: smscorvo-frontend
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: cd frontend && yarn install && yarn build
+    staticPublishPath: ./frontend/build
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        value: https://smscorvo-backend.onrender.com
